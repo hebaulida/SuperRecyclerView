@@ -20,7 +20,6 @@ public class MainActivity extends Activity {
 
 		//创建并设置Adapter
 		mAdapter = new RecyclerViewAdapter(mDatas);
-
 		mRecyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 		mRecyclerView.setAdapter(mAdapter);
