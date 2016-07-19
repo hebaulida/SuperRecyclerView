@@ -24,7 +24,6 @@ public class MainActivity extends Activity {
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 		mRecyclerView.setAdapter(mAdapter);
 
-
 	}
 	protected void initData() {
 		mDatas = new ArrayList<String>();
