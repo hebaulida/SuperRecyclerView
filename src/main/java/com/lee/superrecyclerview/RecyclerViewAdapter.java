@@ -1,7 +1,6 @@
 package com.lee.superrecyclerview;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,8 +50,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 				public boolean onLongClick(View v){
 					int pos = holder.getLayoutPosition();
 					mOnItemClickLitener.onItemLongClick(holder.itemView, pos);
-					Log.d("---------", "-" + pos);
-					Log.d("+++++++++", "+" + position);
 					return true;
 				}
 			});
