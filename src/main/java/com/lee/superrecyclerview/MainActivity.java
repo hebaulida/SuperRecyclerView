@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
 		mAdapter.setOnItemClickLitener(new RecyclerViewAdapter.OnItemClickLitener() {
 			@Override
 			public void onItemClick(View view, int position) {
-				Toast.makeText(MainActivity.this, "点击" + position, Toast.LENGTH_SHORT).show();
+				Toast.makeText(MainActivity.this, "点击事件" + position, Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
