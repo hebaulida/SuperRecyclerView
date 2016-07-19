@@ -1,10 +1,10 @@
 package com.lee.superrecyclerview;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -42,15 +42,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 			holder.itemView.setOnClickListener(new View.OnClickListener(){
 				@Override
 				public void onClick(View v){
-					int pos = position;
-					mOnItemClickLitener.onItemClick(holder.itemLayout,pos);
+					int pos = holder.getLayoutPosition();
+					mOnItemClickLitener.onItemClick(holder.itemView,pos);
 				}
 			});
 			holder.itemView.setOnLongClickListener(new View.OnLongClickListener(){
 				@Override
 				public boolean onLongClick(View v){
 					int pos = holder.getLayoutPosition();
-					mOnItemClickLitener.onItemLongClick(holder.itemLayout, pos);
+					mOnItemClickLitener.onItemLongClick(holder.itemView, pos);
+					Log.d("---------", "-" + pos);
+					Log.d("+++++++++", "+" + position);
 					return true;
 				}
 			});
@@ -64,11 +66,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 	//自定义的ViewHolder，持有每个Item的的所有界面元素
 	public static class MyViewHolder extends RecyclerView.ViewHolder {
 		public TextView mTextView;
-		public LinearLayout itemLayout;
 		public MyViewHolder(View view){
 			super(view);
 			mTextView = (TextView) view.findViewById(R.id.id_num);
-			itemLayout = (LinearLayout)view.findViewById(R.id.item);
 		}
+	}
+	//添加数据
+	public void addItem(String data, int position) {
+		mDatas.add(position, data);
+		notifyItemInserted(position);
+	}
+	//删除数据
+	public void removeItem(int position) {
+		mDatas.remove(position);
+		notifyItemRemoved(position);
 	}
 }
