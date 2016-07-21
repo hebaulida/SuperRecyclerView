@@ -25,6 +25,14 @@ public class RefreshFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		super();
 		this.mDatas = mData;
 	}
+	public interface OnItemClickLitener{
+		void onItemClick(View view, int position);
+		void onItemLongClick(View view , int position);
+	}
+	private OnItemClickLitener mOnItemClickLitener = null;
+	public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener){
+		this.mOnItemClickLitener = mOnItemClickLitener;
+	}
 	/**
 	 * item显示类型
 	 * @param parent
@@ -52,10 +60,29 @@ public class RefreshFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	 * @param holder
 	 * @param position
 	 */
-	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+	public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
 		if(holder instanceof ItemViewHolder) {
 			((ItemViewHolder)holder).item_tv.setText(mDatas.get(position));
 			holder.itemView.setTag(position);
+
+			if (mOnItemClickLitener != null){
+				holder.itemView.setOnClickListener(new View.OnClickListener(){
+					@Override
+					public void onClick(View v){
+						int pos = holder.getLayoutPosition();
+						mOnItemClickLitener.onItemClick(holder.itemView,pos);
+					}
+				});
+				holder.itemView.setOnLongClickListener(new View.OnLongClickListener(){
+					@Override
+					public boolean onLongClick(View v){
+						int pos = holder.getLayoutPosition();
+						mOnItemClickLitener.onItemLongClick(holder.itemView, pos);
+						return true;
+					}
+				});
+			}
+
 		}else if(holder instanceof FootViewHolder){
 			FootViewHolder footViewHolder=(FootViewHolder)holder;
 			switch (load_more_status){
