@@ -28,31 +28,28 @@ public class MainActivity extends Activity {
 	private Button add;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private int lastVisibleItem;
+	public static MainActivity mMainActivity;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		mMainActivity = this;
 		add = (Button) findViewById(R.id.add);
 		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.my_swiperefresh_view);
-
-
-
+		mRecyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
 
 		initData();
 
-		mRecyclerView = (RecyclerView)findViewById(R.id.my_recycler_view);
 		//创建refreshfootadapteradapter
 		adapter = new RefreshFootAdapter(mDatas);
 
 		mLinearLayoutManager = new LinearLayoutManager(this);
-		//垂直方向
+		//设置为垂直方向
 		mLinearLayoutManager.setOrientation(OrientationHelper.VERTICAL);
 
 //		mGridLayoutManager = new GridLayoutManager(this, 4);
-
 //		mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(4, OrientationHelper.VERTICAL);
 		mRecyclerView.setLayoutManager(mLinearLayoutManager);
-//		mRecyclerView.setAdapter(mAdapter);
 		mRecyclerView.setAdapter(adapter);
 		//给竖直显示的数据，画水平横线
 		mRecyclerView.addItemDecoration(new DividerItemDecoration(this,
@@ -60,7 +57,7 @@ public class MainActivity extends Activity {
 		//给水平显示的数据画线，划垂直线
 		mRecyclerView.addItemDecoration(new DividerItemDecoration(this,
 				DividerItemDecoration.HORIZONTAL_LIST));
-		mRecyclerView.addItemDecoration(new DividerGridItemDecoration(this));
+//		mRecyclerView.addItemDecoration(new DividerGridItemDecoration(this));
 		adapter.setOnItemClickLitener(new RefreshFootAdapter.OnItemClickLitener() {
 			@Override
 			public void onItemClick(View view, int position) {
@@ -73,15 +70,15 @@ public class MainActivity extends Activity {
 				adapter.removeItem(position);
 			}
 		});
-
-		//添加默认的动画效果
-		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 		add.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				adapter.addItem("add item", 1);
 			}
 		});
+
+		//添加默认的动画效果
+		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 		//下拉刷新数据
 		mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.google_green);
 		mSwipeRefreshLayout.setColorSchemeColors(R.color.google_blue,
@@ -105,8 +102,10 @@ public class MainActivity extends Activity {
 				super.onScrollStateChanged(recyclerView, newState);
 				if(newState == recyclerView.SCROLL_STATE_IDLE
 						&& lastVisibleItem + 1 == adapter.getItemCount()){
+
 					MoreData();
 					adapter.notifyDataSetChanged();
+					//设置更改footview的状态
 					adapter.changeMoreStatus(RefreshFootAdapter.PULLUP_LOAD_MORE);
 
 				}
@@ -118,19 +117,23 @@ public class MainActivity extends Activity {
 			}
 		});
 	}
+	//初始化数据
 	protected void initData() {
 		mDatas = new ArrayList<String>();
-		for (int i = 'A'; i <= 'D'; i++) {
+		for (int i = 'A'; i <= 'J'; i++) {
 			mDatas.add("" + (char) i);
 		}
 	}
+	//下拉刷新进行的操作
 	private void fetchingNewData() {
 		for(int i = 0;i<5;i++) {
 			mDatas.add(i, "新数据" + i);
 		}
 		mSwipeRefreshLayout.setRefreshing(false);
 	}
+	//上拉刷新进行的操作
 	private void MoreData() {
+		adapter.changeMoreStatus(RefreshFootAdapter.LOADING_MORE);
 		SystemClock.sleep(1000);
 		for(int i = 0;i<5;i++) {
 			mDatas.add( "新数据----" + i);

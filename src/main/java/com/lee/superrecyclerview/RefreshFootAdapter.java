@@ -153,8 +153,8 @@ public class RefreshFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	 * NO_MORE_DATA=2;
 	 * @param status
 	 */
-	public void changeMoreStatus(int status){
-		load_more_status=status;
+	public void changeMoreStatus(int status) {
+		load_more_status = status;
 		notifyDataSetChanged();
 	}
 }
