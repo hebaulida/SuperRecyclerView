@@ -19,6 +19,7 @@ public class RefreshFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	//上拉加载更多状态-默认为0
 	private int load_more_status=0;
 	private static final int TYPE_ITEM = 0;  //普通Item View
+	private static final int TYPE_ITEM_TWO = 2;  //普通Item View 2
 	private static final int TYPE_FOOTER = 1;  //顶部FootView
 	private List<String> mDatas;
 	public RefreshFootAdapter(List<String> mData) {
@@ -33,6 +34,7 @@ public class RefreshFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener){
 		this.mOnItemClickLitener = mOnItemClickLitener;
 	}
+
 	/**
 	 * item显示类型
 	 * @param parent
@@ -43,7 +45,7 @@ public class RefreshFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		//进行判断显示类型，来创建返回不同的View
 		if(viewType==TYPE_ITEM){
 			View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
-			RefreshFootAdapter.ItemViewHolder itemViewHolder = new RefreshFootAdapter.ItemViewHolder(view);
+			ItemViewHolder itemViewHolder = new ItemViewHolder(view);
 			return itemViewHolder;
 		}else if(viewType==TYPE_FOOTER){
 			View foot_view=LayoutInflater.from(parent.getContext()).inflate(R.layout.foot_item, parent, false);
@@ -51,6 +53,10 @@ public class RefreshFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 			//view.setBackgroundColor(Color.RED);
 			FootViewHolder footViewHolder=new FootViewHolder(foot_view);
 			return footViewHolder;
+		}else if (viewType==TYPE_ITEM_TWO) {
+			View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_two, parent, false);
+			ItemTwoViewHolder itemTwoViewHolder = new ItemTwoViewHolder(view);
+			return itemTwoViewHolder;
 		}
 		return null;
 	}
@@ -82,7 +88,27 @@ public class RefreshFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 					}
 				});
 			}
+		}else if (holder instanceof ItemTwoViewHolder){
+			((ItemTwoViewHolder)holder).item_tv.setText(mDatas.get(position));
+			holder.itemView.setTag(position);
 
+			if (mOnItemClickLitener != null){
+				holder.itemView.setOnClickListener(new View.OnClickListener(){
+					@Override
+					public void onClick(View v){
+						int pos = holder.getLayoutPosition();
+						mOnItemClickLitener.onItemClick(holder.itemView,pos);
+					}
+				});
+				holder.itemView.setOnLongClickListener(new View.OnLongClickListener(){
+					@Override
+					public boolean onLongClick(View v){
+						int pos = holder.getLayoutPosition();
+						mOnItemClickLitener.onItemLongClick(holder.itemView, pos);
+						return true;
+					}
+				});
+			}
 		}else if(holder instanceof FootViewHolder){
 			FootViewHolder footViewHolder=(FootViewHolder)holder;
 			switch (load_more_status){
@@ -97,6 +123,7 @@ public class RefreshFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 	}
 
 	/**
+	 * 进行判断将要加载哪种布局
 	 * 进行判断是普通Item视图还是FootView视图
 	 * @param position
 	 * @return
@@ -107,7 +134,11 @@ public class RefreshFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		if (position + 1 == getItemCount()) {
 			return TYPE_FOOTER;
 		} else {
-			return TYPE_ITEM;
+			if (position%2==0){
+				return TYPE_ITEM;
+			}else {
+				return TYPE_ITEM_TWO;
+			}
 		}
 	}
 	@Override
@@ -119,7 +150,15 @@ public class RefreshFootAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 		public TextView item_tv;
 		public ItemViewHolder(View view){
 			super(view);
-			item_tv = (TextView)view.findViewById(R.id.id_num);
+			item_tv = (TextView)view.findViewById(R.id.item_one);
+		}
+	}
+	//自定义的ViewHolder，持有每个Item的的所有界面元素
+	public static class ItemTwoViewHolder extends RecyclerView.ViewHolder {
+		public TextView item_tv;
+		public ItemTwoViewHolder(View view){
+			super(view);
+			item_tv = (TextView)view.findViewById(R.id.item_two);
 		}
 	}
 	/**

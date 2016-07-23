@@ -20,7 +20,6 @@ import java.util.List;
 public class MainActivity extends Activity {
 	private RecyclerView mRecyclerView;
 	private List<String> mDatas;
-	private RecyclerViewAdapter mAdapter;
 	private RefreshFootAdapter adapter;
 	private LinearLayoutManager mLinearLayoutManager;
 	private GridLayoutManager mGridLayoutManager;
