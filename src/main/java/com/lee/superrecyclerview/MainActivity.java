@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.lee.tool.MyToast;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,12 +62,14 @@ public class MainActivity extends Activity {
 		adapter.setOnItemClickLitener(new RefreshFootAdapter.OnItemClickLitener() {
 			@Override
 			public void onItemClick(View view, int position) {
-				Toast.makeText(MainActivity.this, "点击事件" + position, Toast.LENGTH_SHORT).show();
+				MyToast.showToast(MainActivity.this, "点击事件--"+position);
+//				Toast.makeText(MainActivity.this, "点击事件" + position, Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void onItemLongClick(View view, int position) {
-				Toast.makeText(MainActivity.this, "长点击" + position, Toast.LENGTH_SHORT).show();
+				MyToast.showToast(MainActivity.this,"长点击事件----"+position);
+//				Toast.makeText(MainActivity.this, "长点击" + position, Toast.LENGTH_SHORT).show();
 				adapter.removeItem(position);
 			}
 		});
